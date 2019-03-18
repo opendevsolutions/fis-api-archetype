@@ -10,8 +10,8 @@ public class SimpleProcessor implements Processor {
 		//Process example - init
 		System.out.println("Router external - process");
 		System.out.println("Body: " + exchange.getIn().getBody());
-		System.out.println("Body: " + exchange.getIn().getHeader("someHeaderName"));
-		System.out.println("Body: " + exchange.getProperty("somePropertyName"));
+		System.out.println("Header: " + exchange.getIn().getHeader("someHeaderName"));
+		System.out.println("Property: " + exchange.getProperty("somePropertyName"));
 		//Process example - end
 	}
 }

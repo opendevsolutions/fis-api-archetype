@@ -3,11 +3,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ar.com.opendevsolutions.persistances">
-	<select id="getAllPaymenManager" resultType="java.util.HashMap">
-	   select * from PaymenManager
+	<select id="findAllEntityExample" resultType="java.util.HashMap">
+	   select * from TableExample
 	</select>
 	
-	<select id="getPaymenManagerById" resultType="java.util.HashMap">
-	   select * from PaymenManager pm where pm.id = #{id}
+	<select id="findEntityExampleById" resultType="java.util.HashMap">
+	   select * from TableExample pm where pm.id = #{id}
 	</select>
 </mapper>

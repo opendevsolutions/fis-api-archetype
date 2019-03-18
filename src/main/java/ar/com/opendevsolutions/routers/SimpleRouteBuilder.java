@@ -9,7 +9,8 @@ public class SimpleRouteBuilder extends ExampleRouteBuilder {
 
   @Override
   public void addRoutes() throws Exception {
-    from("timer:foo?period=2000").transform().method(MyTransformer.class).log("JAVA >>> ${body}");
+	  /* Example with timer  
+    from("timer:foo?period=2000").transform().method(MyTransformer.class).log("JAVA >>> ${body}");*/
   }
 
 }

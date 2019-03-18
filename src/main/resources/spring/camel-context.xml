@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	    xmlns:camel="http://camel.apache.org/schema/spring"
-	    xmlns:cxf="http://camel.apache.org/schema/cxf"
-	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd  http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd"
-	    xmlns:context="http://www.springframework.org/schema/context">
-
-	<!-- Read filesystem properties -->
-	<context:property-placeholder location="application.properties" />
-	
-	<bean class="org.apache.camel.component.mybatis.MyBatisComponent" id="mybatisMySQL">
+    xmlns:camel="http://camel.apache.org/schema/spring"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd  http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+    <!-- Read filesystem properties -->
+    <context:property-placeholder location="application.properties"/>
+    <bean class="org.apache.camel.component.mybatis.MyBatisComponent" id="mybatisMySQL">
         <property name="sqlSessionFactory" ref="sqlSessionFactoryMySQL"/>
     </bean>
     <!-- sqlSessionFactory para mySQL -->
@@ -18,20 +15,19 @@
         <!-- standard mybatis config file -->
         <property name="mapperLocations" value="classpath*:ar/com/opendevsolutions/**/*.xml"/>
     </bean>
-	
-	<!-- BEANs -->
-	<bean
+    <!-- BEANs -->
+    <bean
         class="org.springframework.jdbc.datasource.DriverManagerDataSource"
         id="mysql-bean" name="dsSybaseMySQL">
         <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
         <property name="url" value="${spring.datasource.url}"/>
-		<property name="username" value="${spring.datasource.username}"/>
+        <property name="username" value="${spring.datasource.username}"/>
         <property name="password" value="${spring.datasource.password}"/>
     </bean>
-    
     <!-- PROVIDERS -->
     <bean class="org.apache.cxf.jaxrs.provider.json.JSONProvider" id="jsonProvider"/>
-    <bean class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter" id="corsProvider" />
+    <bean
+        class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter" id="corsProvider"/>
     <bean class="java.util.ArrayList" id="providers">
         <constructor-arg>
             <list>
@@ -40,35 +36,28 @@
             </list>
         </constructor-arg>
     </bean>
-    
-     <!-- ***CXFrs***  -->
-    <cxf:rsServer address="http://0.0.0.0:8180/archetype" id="restExampleServices"
-    	serviceClass="ar.com.opendevsolutions.services.RestExampleServices">
+    <!-- ***CXFrs***  -->
+    <cxf:rsServer address="http://0.0.0.0:8180/archetype"
+        id="restExampleServices" serviceClass="ar.com.opendevsolutions.services.RestExampleServices">
         <cxf:providers>
             <ref bean="providers"/>
         </cxf:providers>
     </cxf:rsServer>
     
-    <bean id="simpleRouteBuilder" class="ar.com.opendevsolutions.routers.SimpleRouteBuilder" />
-    <bean id="restExampleRouteBuilder" class="ar.com.opendevsolutions.routers.RestExampleRouteBuilder" />
-	<!--  -->
-	
-	<camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
-	  <routeBuilder ref="simpleRouteBuilder" />
-	  <routeBuilder ref="restExampleRouteBuilder" />
-	  
-	  <!-- Router example in Spring DSL -->
-	  <!-- <route id="simple-route">
-	    <from id="route-timer" uri="timer:foo?period=2000"/>
-	    <setBody><simple>Router Example</simple></setBody>
-	    <log id="route-log" message=">>> ${body}"/>
-	  </route>
-	  
-	  <route id="simple-route-db">
-	    <from id="route-timer-db" uri="timer:foo?period=3000"/>
-	    <to uri="mybatisMySQL:getAllPaymenManager?statementType=SelectList&amp;outputHeader=out" />
-	    <log id="route-log-db" message=">>> ${header.out}"/>
-	  </route> -->
-	</camelContext>
-
+    <bean class="ar.com.opendevsolutions.processors.SimpleProcessor" id="simpleProcessor" />
+    <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+        <!-- Router example in Spring DSL -->
+        <!-- <route id="simple-route">
+            <from id="route-timer" uri="timer:foo?period=2000"/>
+            <setBody id="_setBody1">
+                <simple>Router Example</simple>
+            </setBody>
+            <log id="route-log" message=">>> ${body}"/>
+        </route>
+        <route id="simple-route-db">
+            <from id="route-timer-db" uri="timer:foo?period=3000"/>
+            <to id="_to1" uri="mybatisMySQL:findAllPaymenManager?statementType=SelectList&amp;outputHeader=out"/>
+            <log id="route-log-db" message=">>> ${header.out}"/>
+        </route> -->
+    </camelContext>
 </beans>
