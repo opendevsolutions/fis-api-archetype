@@ -5,7 +5,7 @@
     xmlns:cxf="http://camel.apache.org/schema/cxf"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd  http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
     <!-- Read filesystem properties -->
-    <context:property-placeholder location="application.properties"/>
+    <context:property-placeholder location="**/application.properties"/>
     <bean class="org.apache.camel.component.mybatis.MyBatisComponent" id="mybatisMySQL">
         <property name="sqlSessionFactory" ref="sqlSessionFactoryMySQL"/>
     </bean>
@@ -43,8 +43,7 @@
             <ref bean="providers"/>
         </cxf:providers>
     </cxf:rsServer>
-    
-    <bean class="ar.com.opendevsolutions.processors.SimpleProcessor" id="simpleProcessor" />
+    <bean class="ar.com.opendevsolutions.processors.SimpleProcessor" id="simpleProcessor"/>
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
         <!-- Router example in Spring DSL -->
         <!-- <route id="simple-route">
