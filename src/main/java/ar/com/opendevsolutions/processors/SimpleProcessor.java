@@ -7,11 +7,6 @@ public class SimpleProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		//Process example - init
-		System.out.println("Router external - process");
-		System.out.println("Body: " + exchange.getIn().getBody());
-		System.out.println("Header: " + exchange.getIn().getHeader("someHeaderName"));
-		System.out.println("Property: " + exchange.getProperty("somePropertyName"));
-		//Process example - end
+		//Do Something
 	}
 }

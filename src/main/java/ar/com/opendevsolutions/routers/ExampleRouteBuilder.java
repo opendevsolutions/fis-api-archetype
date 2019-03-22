@@ -13,7 +13,7 @@ public abstract class ExampleRouteBuilder extends RouteBuilder {
 	public void configure() throws Exception {
 		/* insert in this method:
 		 * General excelptions
-		 */
+		 */		
 		addRoutes();
 	}
 	

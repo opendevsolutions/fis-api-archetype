@@ -4,17 +4,20 @@
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:cxf="http://camel.apache.org/schema/cxf"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd  http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+    
     <!-- Read filesystem properties -->
     <context:property-placeholder location="**/application.properties"/>
     <bean class="org.apache.camel.component.mybatis.MyBatisComponent" id="mybatisMySQL">
         <property name="sqlSessionFactory" ref="sqlSessionFactoryMySQL"/>
     </bean>
+    
     <!-- sqlSessionFactory para mySQL -->
     <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryMySQL">
         <property name="dataSource" ref="dsSybaseMySQL"/>
         <!-- standard mybatis config file -->
         <property name="mapperLocations" value="classpath*:ar/com/opendevsolutions/**/*.xml"/>
     </bean>
+    
     <!-- BEANs -->
     <bean
         class="org.springframework.jdbc.datasource.DriverManagerDataSource"
@@ -24,39 +27,35 @@
         <property name="username" value="${spring.datasource.username}"/>
         <property name="password" value="${spring.datasource.password}"/>
     </bean>
-    <!-- PROVIDERS -->
-    <bean class="org.apache.cxf.jaxrs.provider.json.JSONProvider" id="jsonProvider"/>
-    <bean
-        class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter" id="corsProvider"/>
-    <bean class="java.util.ArrayList" id="providers">
-        <constructor-arg>
-            <list>
-                <ref bean="jsonProvider"/>
-                <ref bean="corsProvider"/>
-            </list>
-        </constructor-arg>
-    </bean>
-    <!-- ***CXFrs***  -->
-    <cxf:rsServer address="http://0.0.0.0:8180/archetype"
-        id="restExampleServices" serviceClass="ar.com.opendevsolutions.services.RestExampleServices">
-        <cxf:providers>
-            <ref bean="providers"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <bean class="ar.com.opendevsolutions.processors.SimpleProcessor" id="simpleProcessor"/>
+    
+    <!-- Import Processor 
+    <bean class="ar.com.opendevsolutions.processors.SimpleProcessor" id="simpleProcessor"/>-->
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
-        <!-- Router example in Spring DSL -->
-        <!-- <route id="simple-route">
-            <from id="route-timer" uri="timer:foo?period=2000"/>
-            <setBody id="_setBody1">
-                <simple>Router Example</simple>
-            </setBody>
-            <log id="route-log" message=">>> ${body}"/>
-        </route>
-        <route id="simple-route-db">
-            <from id="route-timer-db" uri="timer:foo?period=3000"/>
-            <to id="_to1" uri="mybatisMySQL:findAllPaymenManager?statementType=SelectList&amp;outputHeader=out"/>
-            <log id="route-log-db" message=">>> ${header.out}"/>
-        </route> -->
+        
+        <!-- Rest General Configurations -->
+        <restConfiguration component="jetty" port="8180" host="0.0.0.0" apiContextPath="/swagger" apiContextRouteId="swagger" contextPath="/archetype" enableCORS="true">
+	        <apiProperty key="api.title" value="Microservice - Camel - Rest DSL - Archetype"/>
+	        <apiProperty key="api.description" value="Open Dev Solutions Spring boot archetype"/>
+	        <apiProperty key="api.version" value="0.1"/>
+	        <apiProperty key="api.port" value="8180"/>
+        </restConfiguration>
+        
+        <!-- Entity Example Rest -->
+        <rest path="/rest-entity-example">
+			<description>Api Example</description>
+			<get uri="/find-all" produces="application/json">
+				<description>Get All</description>
+				<responseMessage message="Return all examples." code="200" />
+				<responseMessage message="Bad connection to DB." code="500" />
+					<to uri="direct:findAllEntityExample"/>
+			</get>
+			<get uri="/find-by-id/{id}" produces="application/json">
+				<description>Get By Id</description>
+				<param name="id" description="Id of the example object." type="path" dataType="int" />
+				<responseMessage message="Return id examples." code="200" />
+				<responseMessage message="Bad connection to DB." code="500" />
+					<to uri="direct:findEntityExampleById"/>
+			</get>
+	    </rest>
     </camelContext>
 </beans>

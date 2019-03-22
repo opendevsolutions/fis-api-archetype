@@ -8,14 +8,15 @@ public class RestExampleRouteBuilder extends ExampleRouteBuilder {
 
   @Override
   public void addRoutes() throws Exception {
-	  // proxy de Rest
-	  from("cxfrs:bean:restExampleServices?bindingStyle=SimpleConsumer")
-	  .recipientList(simple("direct:${header.operationName}"));
-	  
-	  // metodo uno del restExampleServices
+
 	  from("direct:findAllEntityExample")
 	  	.to("mybatisMySQL:findAllEntityExample?statementType=SelectList&outputHeader=out")
 	  	.log("RestExample-FindAll: ${header.out}")
+	  	/*
+	  	 * if you like use a process in the midde of the router, you need to do this
+	  	 * .process("simpleProcessor")
+	  	 * simpleProcessor is the process defined in camel context
+	  	 */
 	  	.setBody().simple("${header.out}")
 	  	.marshal().json(JsonLibrary.Jackson);
 	  
