@@ -1,4 +1,4 @@
-package ar.com.opendevsolutions.routers;
+package ar.com.opendevsolutions.services;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
