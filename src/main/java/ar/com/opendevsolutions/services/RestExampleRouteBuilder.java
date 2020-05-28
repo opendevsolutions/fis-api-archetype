@@ -1,7 +1,10 @@
 package ar.com.opendevsolutions.services;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
+
+import ar.com.opendevsolutions.utils.Constants;
 
 @Component
 public class RestExampleRouteBuilder extends ExampleRouteBuilder {
@@ -10,20 +13,20 @@ public class RestExampleRouteBuilder extends ExampleRouteBuilder {
   public void addRoutes() throws Exception {
 
 	  from("direct:findAllEntityExample")
-	  	.to("mybatisMySQL:findAllEntityExample?statementType=SelectList&outputHeader=out")
-	  	.log("RestExample-FindAll: ${header.out}")
-	  	/*
-	  	 * if you like use a process in the midde of the router, you need to do this
-	  	 * .process("simpleProcessor")
-	  	 * simpleProcessor is the process defined in camel context
-	  	 */
-	  	.setBody().simple("${header.out}")
-	  	.marshal().json(JsonLibrary.Jackson);
+		.setHeader(Exchange.HTTP_METHOD, constant(Constants.GET))	
+		.setHeader(Exchange.HTTP_PATH, constant(Constants.EMPTY))
+		.setHeader(Constants.ACCEPT, constant(Constants.APPLICATION_JSON))
+		.setHeader(Constants.CONTENT_TYPE, constant(Constants.APPLICATION_JSON))
+	  	.to("jetty:http://18.231.124.229:8080/client/?bridgeEndpoint=true")
+	  	.log("RestExample-FindAll: ${body}");
 	  
 	  from("direct:findEntityExampleById")
-	  	.to("mybatisMySQL:findEntityExampleById?statementType=SelectOne&inputHeader=id")
-	  	.log("RestExample-FindById: ${body}")
-	  	.marshal().json(JsonLibrary.Jackson);
+		.setHeader(Exchange.HTTP_METHOD, constant(Constants.GET))
+		.setHeader(Exchange.HTTP_PATH, constant(Constants.EMPTY))
+		.setHeader(Constants.ACCEPT, constant(Constants.APPLICATION_JSON))
+		.setHeader(Constants.CONTENT_TYPE, constant(Constants.APPLICATION_JSON))
+		.to("jetty:http://18.231.124.229:8080/client/1?bridgeEndpoint=true")
+		.log("RestExample-FindById: ${body}");
   }
 
 }

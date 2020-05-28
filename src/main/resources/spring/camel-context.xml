@@ -5,29 +5,6 @@
     xmlns:cxf="http://camel.apache.org/schema/cxf"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd  http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
     
-    <!-- Read filesystem properties -->
-    <context:property-placeholder location="**/application.properties"/>
-    <bean class="org.apache.camel.component.mybatis.MyBatisComponent" id="mybatisMySQL">
-        <property name="sqlSessionFactory" ref="sqlSessionFactoryMySQL"/>
-    </bean>
-    
-    <!-- sqlSessionFactory para mySQL -->
-    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryMySQL">
-        <property name="dataSource" ref="dsSybaseMySQL"/>
-        <!-- standard mybatis config file -->
-        <property name="mapperLocations" value="classpath*:ar/com/opendevsolutions/**/*.xml"/>
-    </bean>
-    
-    <!-- BEANs -->
-    <bean
-        class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-        id="mysql-bean" name="dsSybaseMySQL">
-        <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
-        <property name="url" value="${spring.datasource.url}"/>
-        <property name="username" value="${spring.datasource.username}"/>
-        <property name="password" value="${spring.datasource.password}"/>
-    </bean>
-    
     <!-- Import Processor 
     <bean class="ar.com.opendevsolutions.processors.SimpleProcessor" id="simpleProcessor"/>-->
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
@@ -46,14 +23,14 @@
 			<get uri="/find-all" produces="application/json">
 				<description>Get All</description>
 				<responseMessage message="Return all examples." code="200" />
-				<responseMessage message="Bad connection to DB." code="500" />
+				<responseMessage message="Internal error" code="500" />
 					<to uri="direct:findAllEntityExample"/>
 			</get>
 			<get uri="/find-by-id/{id}" produces="application/json">
 				<description>Get By Id</description>
 				<param name="id" description="Id of the example object." type="path" dataType="int" />
 				<responseMessage message="Return id examples." code="200" />
-				<responseMessage message="Bad connection to DB." code="500" />
+				<responseMessage message="Internal error" code="500" />
 					<to uri="direct:findEntityExampleById"/>
 			</get>
 	    </rest>
