@@ -20,12 +20,7 @@
         <!-- Entity Example Rest -->
         <rest path="/rest-entity-example">
 			<description>Api Example</description>
-			<get uri="/find-all" produces="application/json">
-				<description>Get All</description>
-				<responseMessage message="Return all examples." code="200" />
-				<responseMessage message="Internal error" code="500" />
-					<to uri="direct:findAllEntityExample"/>
-			</get>
+			<get uri="/find-all" produces="application/json"><to uri="direct:findAllEntityExample"/></get>
 			<get uri="/find-by-id/{id}" produces="application/json">
 				<description>Get By Id</description>
 				<param name="id" description="Id of the example object." type="path" dataType="int" />
