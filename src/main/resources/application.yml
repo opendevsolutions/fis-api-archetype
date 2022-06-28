@@ -1,0 +1,30 @@
+management:
+  metrics:
+    tags:
+      application: archetype
+  endpoint:
+    camelroutes:
+      enabled: true
+      read-only: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+      read-only: true
+  endpoints:
+    web:
+      exposure:
+        include: info,health,camelroutes,prometheus
+
+camel:
+  springboot:
+    name: archetype
+  component:
+    servlet:
+      mapping:
+        context-path: /api/*
+
+server:
+  port: 8080
+  
+  

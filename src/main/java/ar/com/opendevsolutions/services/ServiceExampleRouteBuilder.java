@@ -1,16 +1,19 @@
 package ar.com.opendevsolutions.services;
 
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import ar.com.opendevsolutions.MainRouteBuilder;
+
 @Component
-public class RestExampleRouteBuilder extends ExampleRouteBuilder {
+@EnableConfigurationProperties
+public class ServiceExampleRouteBuilder extends MainRouteBuilder {
 
   @Override
   public void addRoutes() throws Exception {
 
 	  from("direct:findAllEntityExample")
-	  	.to("mybatisMySQL:findAllEntityExample?statementType=SelectList&outputHeader=out")
 	  	.log("RestExample-FindAll: ${header.out}")
 	  	/*
 	  	 * if you like use a process in the midde of the router, you need to do this
@@ -21,7 +24,6 @@ public class RestExampleRouteBuilder extends ExampleRouteBuilder {
 	  	.marshal().json(JsonLibrary.Jackson);
 	  
 	  from("direct:findEntityExampleById")
-	  	.to("mybatisMySQL:findEntityExampleById?statementType=SelectOne&inputHeader=id")
 	  	.log("RestExample-FindById: ${body}")
 	  	.marshal().json(JsonLibrary.Jackson);
   }
